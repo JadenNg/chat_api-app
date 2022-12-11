@@ -1,11 +1,12 @@
 const path = require('path');
 const express = require('express');
-const morgan = require('morgan');
 const methodOverride = require('method-override');
 const handlebars = require('express-handlebars');
-
 const route = require('./routes');
 const db = require('./config/db');
+//io
+const socketio = require('socket.io');
+
 
 // Connect to DB
 db.connect();
@@ -15,24 +16,19 @@ const port = 3000;
 
 // io
 var server = require('http').createServer(app);
-const io = require('socket.io')(server, {
-    cors: {
-        origins: ['http://localhost:8080',
-            'http://localhost:8081']
-    }
-});
-io.on('connection', (socket) => {
-    const socketId =  socket.id
-    socket.emit('socketID', socketId)
-    console.log('a user connected');
-    socket.on("send", (data) => {
-        io.emit('receive',data)
-      });
-    socket.on('disconnect', () => {
-        console.log('user disconnected');
-    });
-});
+const io = socketio(server);
+io.on('connection', socket => {
+    // User vào phòng
+    socket.on('userJoinRoom', (room) => {
+        socket.join(room);
+    })
 
+
+    // Nhận tin nhắn từ client
+    socket.on('chatMessage', ({ inputMessage, current_room, me }) => {
+        io.to(current_room).emit('serverMessage', { inputMessage, me });
+    })
+});
 
 // Use static folder
 app.use(express.static(path.join(__dirname, 'public')));

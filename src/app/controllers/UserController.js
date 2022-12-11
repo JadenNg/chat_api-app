@@ -19,7 +19,7 @@ class UserController {
     }
 
     findAll(req, res, next) {
-        User.find({ name: { $regex: req.query.search ? req.query.search : '' } })
+        User.find({})
             .then((users) =>
                 res.json({
                     code: 0,
@@ -37,18 +37,29 @@ class UserController {
     }
 
     create(req, res, next) {
-        User.create({ ...req.body })
-            .then(() => {
-                res.json({
-                    code: 0,
-                    message: 'Thành công',
-                })
-            })
-            .catch(() => {
-                res.json({
-                    code: 1,
-                    message: 'Thất bại',
-                })
+        User.findOne({ phone: req.body.phone })
+            .then((user) => {
+                if (user) {
+                    res.json({
+                        code: 1,
+                        message: 'Thất bại',
+                    })
+                }
+                else {
+                    User.create({ ...req.body })
+                        .then(() => {
+                            res.json({
+                                code: 0,
+                                message: 'Thành công',
+                            })
+                        })
+                        .catch(() => {
+                            res.json({
+                                code: 1,
+                                message: 'Thất bại',
+                            })
+                        })
+                }
             })
     }
 

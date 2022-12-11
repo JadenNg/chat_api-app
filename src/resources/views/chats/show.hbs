@@ -1,0 +1,662 @@
+<style>
+    html {
+        scroll-behavior: smooth;
+    }
+
+    ::-webkit-scrollbar {
+        width: 6px;
+    }
+
+    /* Track */
+    ::-webkit-scrollbar-track {
+        background: #f1f1f1;
+    }
+
+    /* Handle */
+    ::-webkit-scrollbar-thumb {
+        background: #888;
+    }
+
+    /* Handle on hover */
+    ::-webkit-scrollbar-thumb:hover {
+        background: #555;
+    }
+
+    .room-chat {
+        height: 100%;
+        overflow: auto;
+    }
+
+    body {
+        padding-top: 20px;
+        background-color: #F5F5F5;
+    }
+
+    .container {
+        padding: 0;
+        background-color: #FFF;
+        box-shadow: 0 10px 20px rgba(0, 0, 0, 0.19), 0 6px 6px rgba(0, 0, 0, 0.23);
+        height: 700px;
+    }
+
+    /* ===== MENU ===== */
+    .menu {
+        float: left;
+        height: 700px;
+        ;
+        width: 70px;
+        background: #4768b5;
+        background: -webkit-linear-gradient(#4768b5, #35488e);
+        background: -o-linear-gradient(#4768b5, #35488e);
+        background: -moz-linear-gradient(#4768b5, #35488e);
+        background: linear-gradient(#4768b5, #35488e);
+        box-shadow: 0 10px 20px rgba(0, 0, 0, 0.19);
+    }
+
+    .menu .items {
+        list-style: none;
+        margin: auto;
+        padding: 0;
+    }
+
+    .menu .items .item {
+        height: 70px;
+        border-bottom: 1px solid #6780cc;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        color: #9fb5ef;
+        font-size: 17pt;
+    }
+
+    .menu .items .item-active {
+        background-color: #5172c3;
+        color: #FFF;
+    }
+
+    .menu .items .item:hover {
+        cursor: pointer;
+        background-color: #4f6ebd;
+        color: #cfe5ff;
+    }
+
+    /* === CONVERSATIONS === */
+
+    .discussions {
+        width: 35%;
+        height: 700px;
+        box-shadow: 0px 8px 10px rgba(0, 0, 0, 0.20);
+        overflow: hidden;
+        display: inline-block;
+    }
+
+    .discussions .discussion {
+        width: 100%;
+        height: 90px;
+        background-color: #FAFAFA;
+        border-bottom: solid 1px #E0E0E0;
+        display: flex;
+        align-items: center;
+        cursor: pointer;
+    }
+
+    .discussions .search {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        color: #E0E0E0;
+    }
+
+    .discussions .search .searchbar {
+        height: 40px;
+        background-color: #FFF;
+        width: 70%;
+        padding: 0 20px;
+        border-radius: 50px;
+        border: 1px solid #EEEEEE;
+        display: flex;
+        align-items: center;
+        cursor: pointer;
+    }
+
+    .discussions .search .searchbar input {
+        margin-left: 15px;
+        height: 38px;
+        width: 100%;
+        border: none;
+        font-family: 'Montserrat', sans-serif;
+        ;
+    }
+
+    .discussions .search .searchbar *::-webkit-input-placeholder {
+        color: #E0E0E0;
+    }
+
+    .discussions .search .searchbar input *:-moz-placeholder {
+        color: #E0E0E0;
+    }
+
+    .discussions .search .searchbar input *::-moz-placeholder {
+        color: #E0E0E0;
+    }
+
+    .discussions .search .searchbar input *:-ms-input-placeholder {
+        color: #E0E0E0;
+    }
+
+    .response {
+        word-break: break-word;
+        max-width: 80%;
+    }
+
+    .discussions .message-active {
+        width: 98.5%;
+        height: 90px;
+        background-color: #b3c7fb;
+        border-bottom: solid 1px #E0E0E0;
+    }
+
+    .discussions .discussion .photo {
+        margin-left: 20px;
+        display: block;
+        width: 45px;
+        height: 45px;
+        background: #E6E7ED;
+        -moz-border-radius: 50px;
+        -webkit-border-radius: 50px;
+        background-position: center;
+        background-size: cover;
+        background-repeat: no-repeat;
+    }
+
+    .online {
+        position: relative;
+        top: 30px;
+        left: 35px;
+        width: 13px;
+        height: 13px;
+        background-color: #8BC34A;
+        border-radius: 13px;
+        border: 3px solid #FAFAFA;
+    }
+
+    .desc-contact {
+        height: 43px;
+        width: 50%;
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+    }
+
+    .discussions .discussion .name {
+        margin: 0 0 0 20px;
+        font-family: 'Montserrat', sans-serif;
+        font-size: 11pt;
+        color: #515151;
+    }
+
+    .discussions .discussion .message {
+        margin: 6px 0 0 20px;
+        font-family: 'Montserrat', sans-serif;
+        font-size: 9pt;
+        color: #515151;
+    }
+
+    .timer {
+        margin-left: 15%;
+        font-family: 'Open Sans', sans-serif;
+        font-size: 11px;
+        padding: 3px 8px;
+        color: #BBB;
+        background-color: #FFF;
+        border: 1px solid #E5E5E5;
+        border-radius: 15px;
+    }
+
+    .chat {
+        display: flex;
+        flex-direction: column;
+        width: calc(65% - 85px);
+    }
+
+    .header-chat {
+        background-color: #FFF;
+        height: 90px;
+        box-shadow: 0px 3px 2px rgba(0, 0, 0, 0.100);
+        display: flex;
+        align-items: center;
+    }
+
+    .chat .header-chat .icon {
+        margin-left: 30px;
+        color: #515151;
+        font-size: 14pt;
+    }
+
+    .chat .header-chat .name {
+        margin: 0 0 0 20px;
+        text-transform: uppercase;
+        font-family: 'Montserrat', sans-serif;
+        font-size: 13pt;
+        color: #515151;
+    }
+
+    .chat .header-chat .right {
+        position: absolute;
+        right: 40px;
+    }
+
+    .chat .messages-chat {
+        flex: 1;
+        padding: 25px 35px;
+    }
+
+    .chat .messages-chat .message {
+        display: flex;
+        align-items: center;
+        margin-bottom: 8px;
+    }
+
+    .chat .messages-chat .message .photo {
+        display: block;
+        width: 45px;
+        height: 45px;
+        background: #E6E7ED;
+        -moz-border-radius: 50px;
+        -webkit-border-radius: 50px;
+        background-position: center;
+        background-size: cover;
+        background-repeat: no-repeat;
+    }
+
+    .chat .messages-chat .text {
+        margin: 0 35px;
+        background-color: #f6f6f6;
+        padding: 15px;
+        border-radius: 12px;
+    }
+
+    . {
+        margin-left: 45px;
+    }
+
+    .time {
+        font-size: 10px;
+        color: lightgrey;
+        margin-bottom: 10px;
+        margin-left: 85px;
+    }
+
+    .response-time {
+        float: right;
+        margin-right: 40px !important;
+    }
+
+    .response {
+        float: right;
+        margin-right: 0px !important;
+        margin-left: auto;
+        /* flexbox alignment rule */
+    }
+
+    .response .text {
+        background-color: #e3effd !important;
+    }
+
+    .footer-chat {
+        border-top: 1px solid #ccc;
+        height: 60px;
+    }
+
+    .chat .footer-chat .name {
+        margin: 0 0 0 20px;
+        text-transform: uppercase;
+        font-family: 'Montserrat', sans-serif;
+        font-size: 13pt;
+        color: #515151;
+    }
+
+    .chat .footer-chat .right {
+        position: absolute;
+        right: 40px;
+    }
+
+    .write-message {
+        border: none !important;
+        width: 82%;
+        height: 50px;
+        margin-left: 10px;
+        padding: 10px;
+        outline-color: #90abef;
+        margin-top: 6px;
+    }
+
+    .footer-chat *::-webkit-input-placeholder {
+        color: #C0C0C0;
+        font-size: 13pt;
+    }
+
+    .footer-chat input *:-moz-placeholder {
+        color: #C0C0C0;
+        font-size: 13pt;
+    }
+
+    .footer-chat input *::-moz-placeholder {
+        color: #C0C0C0;
+        font-size: 13pt;
+        margin-left: 5px;
+    }
+
+    .footer-chat input *:-ms-input-placeholder {
+        color: #C0C0C0;
+        font-size: 13pt;
+    }
+
+    .clickable {
+        cursor: pointer;
+    }
+
+    .discussion:hover {
+        background-color: #e6e6e6;
+    }
+
+    .room-active {
+        background-color: #c6d7ff !important;
+    }
+
+    #form-chat {
+        height: 100%;
+        overflow: auto;
+    }
+
+    .list-friend {
+        max-height: 600px;
+        overflow: auto;
+    }
+
+    .list-item {
+        height: 50px;
+        padding: 10px;
+        border-bottom: 1px solid #354ebb;
+        cursor: pointer;
+    }
+
+    .list-item:hover {
+        background-color: #92a4d3;
+    }
+
+    .show {
+        display: none;
+    }
+</style>
+<div style="text-align: right; margin-right: 20px; position: fixed; right: 0px;">
+    <a href="/login"
+        style="cursor: pointer;display: inline-block; padding: 10px; background-color: #4462ad; border-radius: 4px; color: #fff; font-weight: 600;">Đăng
+        xuất</a>
+</div>
+<div id="me" style="opacity: 0; height: 0px; overflow: hidden;">{{me}}</div>
+<div style="opacity: 0; height: 0px; overflow: hidden;">
+    <a id="reload" href="/chat?id={{me}}">aa</a>
+</div>
+<div class="row">
+    <nav class="menu position-relative">
+        <div id="btn_search_friend" class="item text-white text-center bg-success rounded mt-1"
+            style="cursor: pointer;">Search friend</div>
+        <div class="list-friend position-absolute rounded show"
+            style="left: 0; width: 210px; max-width: 250px; background-color: rgb(143, 183, 232); z-index: 99; top: 60px; box-shadow: 2px 1px 3px 1px rgba(0, 0, 0, 0.20);">
+            {{#each users}}
+            <div id2="{{_id}}" id2Name="{{name}}" class="list-item">{{name}}</div>
+            {{/each}}
+        </div>
+    </nav>
+    <section class="discussions">
+        <div class="discussion search">
+            <div class="searchbar">
+                <input id="id-create" style="outline: none" type="text" placeholder="Enter ID friend ..."></input>
+            </div>
+            <button id="btn-create" class="btn btn-success ml-3" style="border-radius: 24px;">Create</button>
+        </div>
+        <div class="room-chat">
+            {{#each rooms as |rooms|}}
+            <div id="{{_id}}" class="discussion" id1="{{id1}}" id2="{{id2}}">
+                <div class="photo"
+                    style="background-image: url(https://images.unsplash.com/photo-1438761681033-6461ffad8d80?ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&ixlib=rb-1.2.1&auto=format&fit=crop&w=1050&q=80);">
+                    <div class="online"></div>
+                </div>
+                <div class="desc-contact">
+                    <p class="name">{{id1Name}}</p>
+                    <p class="ml-4">{{messages.[0].message}}</p>
+                </div>
+            </div>
+            {{/each}}
+        </div>
+    </section>
+    <section class="chat" style="height: 700px;">
+        <div class="header-chat">
+            <p class="name">Chat friends</p>
+            <i class="icon clickable fa fa-ellipsis-h right" aria-hidden="true"></i>
+        </div>
+        <div id="form-chat" class="messages-chat">
+            <div class="text-center"><i>Hãy chọn 1 cuộc trò chuyện!!!</i></div>
+        </div>
+        <div class="footer-chat">
+            <input id="input-message" style="border: 1px solid #ccc !important; border-radius: 2px;" type="text"
+                class="write-message" placeholder="Type your message here"></input>
+            <button id="send-message" class="btn btn-primary ml-4 mt-0 mb-1"
+                style="outline: none; border: none; box-shadow: none;">Send</button>
+        </div>
+    </section>
+</div>
+<script src="https://cdn.socket.io/4.5.4/socket.io.min.js"
+    integrity="sha384-/KNQL8Nu5gCHLqwqfQjA689Hhoqgi2S84SNUxC3roTe4EhJ9AfLkp8QiQcU8AMzI"
+    crossorigin="anonymous"></script>
+<script>
+
+    ///io socket
+    const socket = io();
+    //variable
+    var you = ""
+    var me = document.querySelector('#me').innerHTML
+    var messages = []
+    // scroll bottom
+    function scrollBottom() {
+        var objDiv = document.getElementById("form-chat");
+        objDiv.scrollTop = objDiv.scrollHeight;
+    }
+    // room chat select 
+    var current_room = "";
+    let discussions = document.querySelectorAll('.room-chat .discussion');
+    discussions.forEach((item) => {
+        item.addEventListener('click', () => {
+            document.querySelector("#input-message").value = ""
+            current_room = item.getAttribute('id')
+            console.log(item.getAttribute('id1'), "id")
+            you = item.getAttribute('id1')
+            if (you == me) {
+                you = item.getAttribute('id2')
+            }
+            getRoom(current_room)
+            if (item.classList.contains('room-active')) {
+                return
+            }
+            else {
+                discussions.forEach(iremove => {
+                    if (iremove.classList.contains('room-active')) {
+                        iremove.classList.remove('room-active')
+                    }
+                })
+            }
+            item.classList.add('room-active')
+        })
+    })
+    //get mesages room
+    function getRoom(id) {
+        fetch('/api/room?id=' + id).then((response) => response.json())
+            .then((data) => {
+                let html_messages = ""
+                messages = data.data.messages
+                messages.forEach(item => {
+                    if (item.from == me) {
+                        html_messages +=
+                            `
+                                    <div class="message ">
+                                        <div class="response">
+                                            <p class="text">${item.message}</p>
+                                        </div>
+                                    </div>
+                                `
+                    }
+                    else {
+                        html_messages +=
+                            `
+                                    <div class="message">
+                                        <p class="text"> ${item.message} </p>
+                                    </div>
+                                 `
+                    }
+                })
+                if (!html_messages) {
+                    html_messages += "<div class='text-center'><i>Hãy bắt đầu cuộc trò chuyện!!!</i></div>"
+                }
+                document.querySelector('#form-chat').innerHTML = html_messages;
+                scrollBottom()
+                socket.emit('userJoinRoom', current_room);
+            })
+    }
+    //  message
+
+    // event send message
+    var form_chat = document.querySelector('#form-chat')
+    let btn_send = document.querySelector('#send-message')
+    btn_send.addEventListener('click', () => {
+        let message = document.querySelector("#input-message");
+        if (message.value.trim() == "") {
+            message.value = ""
+        }
+        let entry = {
+            from: me,
+            to: you,
+            message: message.value
+        }
+        messages.push(entry)
+
+        //add html
+        let child = document.createElement('div')
+        child.classList.add('message')
+        child.innerHTML = "<div class='response'><p class='text'>" + message.value + "</p></div>"
+        form_chat.appendChild(child)
+        //clear input-mesage
+        //scrool bottom
+        scrollBottom()
+        postData('/api/room/update', { _id: current_room, from: me, to: you, messages: messages })
+            .then((data) => {
+                console.log(data); // JSON data parsed by `data.json()` call
+            });
+    })
+    // POST METHOD
+    // Example POST method implementation:
+    async function postData(url = '', data = {}) {
+        // Default options are marked with *
+        const response = await fetch(url, {
+            method: 'POST', // *GET, POST, PUT, DELETE, etc.
+            mode: 'cors', // no-cors, *cors, same-origin
+            cache: 'no-cache', // *default, no-cache, reload, force-cache, only-if-cached
+            credentials: 'same-origin', // include, *same-origin, omit
+            headers: {
+                'Content-Type': 'application/json'
+                // 'Content-Type': 'application/x-www-form-urlencoded',
+            },
+            redirect: 'follow', // manual, *follow, error
+            referrerPolicy: 'no-referrer', // no-referrer, *no-referrer-when-downgrade, origin, origin-when-cross-origin, same-origin, strict-origin, strict-origin-when-cross-origin, unsafe-url
+            body: JSON.stringify(data) // body data type must match "Content-Type" header
+        });
+        return response.json(); // parses JSON response into native JavaScript objects
+    }
+
+    document.querySelector("#input-message").addEventListener("keypress", function (event) {
+        if (event.key === "Enter") {
+            // Cancel the default action, if needed
+            event.preventDefault();
+            // Trigger the button element with a click
+            document.getElementById("send-message").click();
+        }
+    });
+
+
+    // Chat form
+    const chatForm = document.getElementById("send-message");
+
+    // Chat form submit
+    chatForm.addEventListener('click', (e) => {
+        const inputMessage = document.querySelector('#input-message').value;
+        // Gửi tin nhắn lên server
+        if (!inputMessage) {
+            return
+        }
+        socket.emit('chatMessage', { inputMessage, current_room, me });
+        document.querySelector("#input-message").value = "";
+    });
+
+    // Nhận tin nhắn từ server
+    socket.on('serverMessage', ({ inputMessage, me }) => {
+        let value_id = document.querySelector('#me').innerHTML
+        if (value_id != me) {
+            console.log(inputMessage, "đã nhận")
+            const divElement = document.createElement('div');
+            divElement.classList.add('message');
+            divElement.innerHTML = `<p class="text"> ${inputMessage} </p>`
+            form_chat.appendChild(divElement);
+            scrollBottom()
+        }
+    });
+    // create 
+    let btn_create = document.querySelector('#btn-create')
+    btn_create.addEventListener('click', () => {
+        var id_create = document.querySelector('#id-create').value;
+        if (id_create.trim() == "") {
+            alert('Please enter ID')
+            return;
+        }
+        postData('/api/room/create', { id1: me, id2: id_create })
+            .then(data => {
+                if (data.code == 0) {
+                    document.querySelector('#reload').click()
+                }
+                else if (data.code == 1) {
+                    alert('Chat already exists')
+                }
+                else {
+                    alert('ID error')
+                }
+            })
+            .then(() => {
+                document.querySelector('#id-create').value = ""
+            })
+    })
+    // togle show
+    var show_friend = document.querySelector('.list-friend')
+    var btn_search_friend = document.querySelector('#btn_search_friend')
+    btn_search_friend.addEventListener('click', () => {
+        show_friend.classList.toggle('show')
+    })
+    // add friend
+    var list_friend = document.querySelectorAll('.list-item').forEach(item => {
+        item.addEventListener('click', () => {
+            show_friend.classList.toggle('show')
+            let id2_create = item.getAttribute('id2')
+            postData('/api/room/create', { id1: me, id2: id2_create })
+                .then(data => {
+                    if (data.code == 0) {
+                        document.querySelector('#reload').click()
+                    }
+                    else {
+                        alert('Chat already exists')
+                    }
+                })
+                .then(() => {
+                    document.querySelector('#id-create').value = ""
+                })
+
+        })
+    })
+</script>
