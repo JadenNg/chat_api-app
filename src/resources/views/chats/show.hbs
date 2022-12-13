@@ -400,8 +400,8 @@
 </div>
 <div class="row">
     <nav class="menu position-relative">
-        <div id="btn_search_friend" class="item text-white text-center bg-success rounded mt-1"
-            style="cursor: pointer;">Search friend</div>
+        <div id="btn_search_friend" class="item text-white text-center bg-success py-3"
+            style="cursor: pointer;">Search</div>
         <div class="list-friend position-absolute rounded show"
             style="left: 0; width: 210px; max-width: 250px; background-color: rgb(143, 183, 232); z-index: 99; top: 60px; box-shadow: 2px 1px 3px 1px rgba(0, 0, 0, 0.20);">
             {{#each users}}
@@ -418,7 +418,9 @@
         </div>
         <div class="room-chat">
             {{#each rooms as |rooms|}}
-            <div id="{{_id}}" class="discussion" id1="{{id1}}" id2="{{id2}}">
+            <div id="{{_id}}" class="discussion" style="position: relative;" id1="{{id1}}" id2="{{id2}}">
+                <button room="{{_id}}" style="position: absolute; right: 6px; top: 6px;"
+                    class="btn btn-sm btn-danger delete-room" type="button">X</button>
                 <div class="photo"
                     style="background-image: url(https://images.unsplash.com/photo-1438761681033-6461ffad8d80?ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&ixlib=rb-1.2.1&auto=format&fit=crop&w=1050&q=80);">
                     <div class="online"></div>
@@ -657,6 +659,26 @@
                     document.querySelector('#id-create').value = ""
                 })
 
+        })
+    })
+
+    // delete room 
+    let rooms_delete = document.querySelectorAll('.delete-room');
+    rooms_delete.forEach(item => {
+        item.addEventListener('click', (e) => {
+            e.stopPropagation();
+            var id_room = item.getAttribute('room')
+            console.log(id_room,"room")
+            postData('/api/room/delete', { id: id_room })
+                .then(data => {
+                    if (data.code == 0) {
+                        alert('Delete success')
+                        document.querySelector('#reload').click()
+                    }
+                    else {
+                        alert('Chat already exists')
+                    }
+                })
         })
     })
 </script>

@@ -39,7 +39,8 @@ class RoomController {
                                 i.id2Name = i.id1Name
                             }
                         })
-                        User.find({})
+                        console.log(req.query.id, "id check")
+                        User.find({ '_id': { $ne: req.query.id } })
                             .then((users) =>
                                 res.render('chats/show', {
                                     rooms: mutipleMongooseToObject(list),
@@ -147,14 +148,7 @@ class RoomController {
             })
     }
     delete(req, res, next) {
-        let id1 = req.query.id1
-        let id2 = req.query.id2
-        Room.deleteOne({
-            $or: [
-                { $and: [{ id1: id1 }, { id2: id2 }] },
-                { $and: [{ id1: id2 }, { id2: id1 }] }
-            ]
-        })
+        Room.deleteOne({ _id: req.body.id })
             .then(() => {
                 res.json({
                     code: 0,
