@@ -1,4 +1,7 @@
+download mongodb
+
 .vscode
+go to the terminal type: npm i and then npm run start
 
 src/public/css/
 node_modules/
